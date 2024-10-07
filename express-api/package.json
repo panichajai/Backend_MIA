@@ -2,9 +2,9 @@
   "name": "express-api",
   "version": "0.0.0",
   "private": true,
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
