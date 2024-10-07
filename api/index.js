@@ -17,7 +17,7 @@ mongoose.connect(MONGO_URI)
 
 var app = express();
 var customersRouter = require('../api/routes/customers');
-// const userRoutes = require('../api/routes/user');
+var userRoutes = require('../api/routes/users');
 // const products = require('../api/rest/products');
 
 app.get('/', function(req, res, next) {
@@ -40,8 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/api/users', userRoutes);
-// app.use('/api/products', products);
+app.use('/api/users', userRoutes);
 app.use('/api/customers', customersRouter);
 
 app.use(function(req, res, next) {
