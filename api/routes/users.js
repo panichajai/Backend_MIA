@@ -51,6 +51,29 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+router.get('/verified', async (req, res, next) => {
+    try {
+        const authHeader = req.headers['authorization'];
+    let authToken = '';
+    if (authHeader) {
+      authToken = authHeader.split(' ')[1];
+    }
+        console.log('authToken :', authToken)
+        const user = jwt.verify(authToken, secretKey)
+        console.log('user', user)
+        const checkuser = await User.findOne({user_email :  user.email });
+        if (!checkuser) {
+            res.status(501).json(new ResponseModel(501, false, 'user not fo',null,null));
+        }
+        res.status(200).json(new ResponseModel(200, true, 'successful',user,null));
+        
+    } 
+    catch (err) {
+        console.error('Error fetching data:', err); 
+        res.status(501).json(new ResponseModel(501, false, 'error',null,err));
+    }
+});
+
 router.get('/:id', async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id); 
