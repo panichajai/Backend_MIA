@@ -1,21 +1,20 @@
 var express = require('express');
 var router = express.Router();
-var Customer = require('../models/Customer'); 
+var Customer = require('../models/CustomerModel'); 
 var ResponseModel = require('../models/ResponseModel');
-var mongoose = require('mongoose');  // เพิ่ม mongoose เข้ามา
-
+var mongoose = require('mongoose'); 
 
 const moment = require('moment');
 
 function convertThaiYearToCE(date) {
-    if (!date) return null; // ตรวจสอบว่าค่าวันที่ว่างหรือไม่
-    const momentDate = moment(date, 'DD/MM/YYYY'); // ใช้ moment ตรวจสอบฟอร์แมต
+    if (!date) return null; 
+    const momentDate = moment(date, 'DD/MM/YYYY'); 
     if (!momentDate.isValid()) {
         console.error("Invalid date format:", date);
-        return null; // ส่งคืน null ถ้าวันที่ไม่ถูกต้อง
+        return null; 
     }
     const year = momentDate.year();
-    return momentDate.year(year - 543).format('YYYY-MM-DD'); // ลดปีลง 543 และแปลงเป็นฟอร์แมต YYYY-MM-DD
+    return momentDate.year(year - 543).format('YYYY-MM-DD'); 
 }
 
 
@@ -29,14 +28,14 @@ router.get('/', async (req, res, next) => {
         res.status(200).json(new ResponseModel(200, true, 'successful', customers,null));    
     }
     catch (err) {
-        console.error('Error fetching data:', err); // แสดง log ข้อผิดพลาด
+        console.error('Error fetching data:', err); 
         res.status(501).json(new ResponseModel(501, false, 'error',null,err));
     }
     
 })
 
 router.post('/', async (req, res, next) => {
-    console.log('Request Body:', req.body); // ตรวจสอบ request body
+    console.log('Request Body:', req.body); 
   
     const { 
       customer_title,
@@ -49,8 +48,7 @@ router.post('/', async (req, res, next) => {
       customer_issuedDate,
       customer_expireDate
     } = req.body; 
-    
-    // ตรวจสอบว่ามีค่าที่จำเป็นหรือไม่
+
     if (!customer_title || !customer_fname || !customer_lname || !customer_phone || !customer_idCard || !customer_dateOfBirth || !customer_gender || !customer_issuedDate || !customer_expireDate) {
         console.log()
         return res.status(400).json(new ResponseModel(400, false, 'Missing required fields'));
@@ -61,18 +59,15 @@ router.post('/', async (req, res, next) => {
   }
 
     try {
-      // ตรวจสอบว่ามีลูกค้าด้วยหมายเลขบัตรประชาชนนี้หรือไม่
       const customer = await Customer.findOne({ customer_idCard });
       if (customer) {
         return res.status(500).json(new ResponseModel(500, false, 'The ID card is already in use.', customer, null));
       }
   
-      // แปลงวันที่ให้ถูกต้อง
       const dob = moment(customer_dateOfBirth, 'YYYY-MM-DD').toDate();
       const issued = moment(customer_issuedDate, 'YYYY-MM-DD').toDate();
       const expire = moment(customer_expireDate, 'YYYY-MM-DD').toDate();
   
-      // สร้างลูกค้าใหม่
       const newCustomer = await Customer.create({
         customer_title,
         customer_fname,
@@ -97,8 +92,6 @@ router.post('/', async (req, res, next) => {
 router.get('/:id', async (req, res) => {
     try {
       const id = req.params.id;
-
-      // ตรวจสอบว่า id ไม่ใช่ undefined และมีความยาวที่ถูกต้อง
       if (!id || id.length !== 24) {
         return res.status(400).json(new ResponseModel(400, false, 'Invalid ID format'));
       }
@@ -133,7 +126,6 @@ router.put('/:id', async (req, res, next) => {
     }
 });
 
-// เส้นทาง DELETE สำหรับลบผู้ใช้
 router.delete('/:id', async (req, res, next) => {
     try {
         const deletedUser = await Customer.findByIdAndDelete(req.params.id); 

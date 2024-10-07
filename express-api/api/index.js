@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const products = require('./routes/products');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;
@@ -17,11 +16,10 @@ mongoose.connect(MONGO_URI)
   .catch((err) => console.error('can not connect :',err))
 
 var app = express();
-var customersRouter = require('./routes/customers');
-const userRoutes = require('./routes/users');
+var customersRouter = require('../api/routes/customers');
+// const userRoutes = require('../api/routes/user');
+// const products = require('../api/rest/products');
 
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
 app.get('/', function(req, res, next) {
     const currentTime = new Date();
     res.send(`This is my API MIA running... Current time: ${currentTime}`);
@@ -42,8 +40,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/api/users', userRoutes);
-app.use('/api/products', products);
+// app.use('/api/users', userRoutes);
+// app.use('/api/products', products);
 app.use('/api/customers', customersRouter);
 
 app.use(function(req, res, next) {
