@@ -10,8 +10,12 @@ require('dotenv').config();
 mongoose.Promise = global.Promise;
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
-const FONTEND_URL = process.env.FONTEND_URL;
-
+const FONTENDDEV_URL = process.env.FONTENDDEV_URL;
+const FONTENDPRD_URL = process.env.FONTENDPRD_URL;
+const allowedOrigins = [
+  FONTENDDEV_URL, 
+  FONTENDPRD_URL
+];
 mongoose.connect(MONGO_URI)
   .then(() => console.log('connection successfully!'))
   .catch((err) => console.error('can not connect :',err))
@@ -19,7 +23,6 @@ mongoose.connect(MONGO_URI)
 var app = express();
 var customersRouter = require('../api/routes/customers');
 var userRoutes = require('../api/routes/users');
-// const products = require('../api/rest/products');
 
 app.get('/', function(req, res, next) {
     const currentTime = new Date();
@@ -30,10 +33,21 @@ app.get('/heatcheck', function(req, res, next) {
     const currentTime = new Date();
     res.send(`This is my about route. Current time: ${currentTime}`);
 });
-  
+console.log(`Server Origin ${allowedOrigins}`);
 app.use(cors({
-  origin: FONTEND_URL
+  origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+      } else {
+          callback(new Error('Not allowed by CORS'));
+      }
+  }
 }));
+// app.use(cors({
+//   origin: FONTEND_URL
+// }));
 
 app.use(logger('dev'));
 app.use(express.json());
