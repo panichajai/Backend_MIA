@@ -11,6 +11,7 @@ require('dotenv').config();
 mongoose.Promise = global.Promise;
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
+const FONTEND_URL = process.env.FONTEND_URL;
 
 mongoose.connect(MONGO_URI)
   .then(() => console.log('connection successfully!'))
@@ -26,7 +27,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(cors({
-  origin: 'http://localhost:3000'
+  origin: FONTEND_URL
 }));
 
 app.use(logger('dev'));
