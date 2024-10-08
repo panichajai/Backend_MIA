@@ -12,9 +12,12 @@ const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 const FONTENDDEV_URL = process.env.FONTENDDEV_URL;
 const FONTENDPRD_URL = process.env.FONTENDPRD_URL;
+const FONTENDPRDUI_URL = process.env.FONTENDPRDUI_URL;
+
 const allowedOrigins = [
   FONTENDDEV_URL, 
-  FONTENDPRD_URL
+  FONTENDPRD_URL,
+  FONTENDPRDUI_URL
 ];
 mongoose.connect(MONGO_URI)
   .then(() => console.log('connection successfully!'))
