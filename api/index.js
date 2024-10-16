@@ -26,6 +26,10 @@ mongoose.connect(MONGO_URI)
 var app = express();
 var customersRouter = require('../api/routes/customers');
 var userRoutes = require('../api/routes/users');
+var statusInsuranceRoutes = require('../api/routes/statusInsuranceSetting');
+var carbrandRoutes = require('../api/routes/carbrand');
+var installmentRoutes = require('../api/routes/Installment');
+
 
 app.get('/', function(req, res, next) {
     const currentTime = new Date();
@@ -60,6 +64,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customersRouter);
+app.use('/api/statusInsurance', statusInsuranceRoutes);
+app.use('/api/carbrand', carbrandRoutes);
+app.use('/api/installment', installmentRoutes);
+
 
 app.use(function(req, res, next) {
   next(createError(404));
