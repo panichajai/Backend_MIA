@@ -118,7 +118,7 @@ router.put('/:id', async (req, res, next) => {
     try {
         const updatedUser = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!updatedUser) {
-            res.status(500).json(new ResponseModel(500, false, 'User not found',customer,null));
+            res.status(500).json(new ResponseModel(500, false, 'User not found',updatedUser,null));
         }
         return res.status(200).json(new ResponseModel(200, true, 'User updated successfully', updatedUser));
     } catch (err) {
@@ -130,7 +130,7 @@ router.delete('/:id', async (req, res, next) => {
     try {
         const deletedUser = await Customer.findByIdAndDelete(req.params.id); 
         if (!deletedUser) {
-            res.status(500).json(new ResponseModel(500, false, 'User not found',customer,null));
+            res.status(500).json(new ResponseModel(500, false, 'User not found',deletedUser,null));
         }
         return res.status(200).json(new ResponseModel(200, true, 'User deleted successfully',deletedUser,null));
 

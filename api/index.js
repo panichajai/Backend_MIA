@@ -25,6 +25,7 @@ mongoose.connect(MONGO_URI)
 
 var app = express();
 var customersRouter = require('../api/routes/customers');
+var insuranceRoutes = require('../api/routes/insurance');
 var userRoutes = require('../api/routes/users');
 var settingRoutes = require('./routes/setting');
 
@@ -63,6 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customersRouter);
+app.use('/api/insurance', insuranceRoutes);
 app.use('/api/setting', settingRoutes);
 
 
